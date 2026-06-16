@@ -135,10 +135,13 @@ def main():
             if key_lst[key]:
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
-        kk_rct.move_ip(sum_mv)
+        kk_speed = 1.0 + (min(tmr // 500,9)*0.5)
+        move_x = sum_mv[0] * kk_speed
+        move_y = sum_mv[1] * kk_speed
+        kk_rct.move_ip(move_x,move_y)
  
         if check_bound(kk_rct) != (True,True):
-            kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
+            kk_rct.move_ip(-move_x,-move_y)
         kk_img = kk_imgs[tuple(sum_mv)]
         screen.blit(kk_img, kk_rct)
 
