@@ -14,9 +14,10 @@ DELTA = {
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+
 def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
     """
-    引数：こうかとんRect or 爆弾Rect;
+    引数：こうかとんRect or 爆弾Rect
     戻り値：判定結果タプル(横方向結果判定、縦方向結果判定)
     画面内ならTrue、画面外ならFalseを返す
     """
@@ -135,72 +136,25 @@ def main():
             if key_lst[key]:
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
-        kk_speed = 1.0 + (min(tmr // 500,9)*0.5)
-        move_x = sum_mv[0] * kk_speed
+        kk_speed = 1.0 + (min(tmr // 500,9)*0.5) #移動速度の設定
+        move_x = sum_mv[0] * kk_speed #移動速度を適用
         move_y = sum_mv[1] * kk_speed
-        kk_rct.move_ip(move_x,move_y)
+        kk_rct.move_ip(move_x,move_y) #移動の実行
  
         if check_bound(kk_rct) != (True,True):
             kk_rct.move_ip(-move_x,-move_y)
-        kk_img = kk_imgs[tuple(sum_mv)]
+        kk_img = kk_imgs[tuple(sum_mv)] #移動方向にあった画像の選択
         screen.blit(kk_img, kk_rct)
 
-        bb_img = bb_imgs[min(tmr // 500, 9)]
-        bb_rct.width = bb_img.get_rect().width
+        bb_img = bb_imgs[min(tmr // 500, 9)] #段階に応じた爆弾画像の選択
+        bb_rct.width = bb_img.get_rect().width #爆弾RectのサイズをSurfaceに合わせる
         bb_rct.height = bb_img.get_rect().height
-        avx = vx * bb_accs[min(tmr // 500, 9)]
-        avy = vy * bb_accs[min(tmr // 500, 9)]
+        avx = vx * bb_accs[min(tmr // 500, 9)] #段階に応じた横速度
+        avy = vy * bb_accs[min(tmr // 500, 9)] #段階に応じた縦速度
 
-        bb_rct.move_ip(avx,avy)
+        bb_rct.move_ip(avx,avy) #速度に応じて爆弾を移動
         yoko, tate = check_bound(bb_rct)
-        if not yoko:
-            vx*=-1
-        if not tate:
-            vy*=-1
-        screen.blit(bb_img, bb_rct)
-        pg.display.update()
-        tmr += 1
-        clock.tick(50)
-
-
-if __name__ == "__main__":
-    pg.init()
-    main()
-    pg.quit()
-    sys.exit()
-d()
-        sum_mv = [0, 0]
-        # if key_lst[pg.K_UP]:
-        #     sum_mv[1] -= 5
-        # if key_lst[pg.K_DOWN]:
-        #     sum_mv[1] += 5
-        # if key_lst[pg.K_LEFT]:
-        #     sum_mv[0] -= 5
-        # if key_lst[pg.K_RIGHT]:
-        #     sum_mv[0] += 5
-        for key, mv in DELTA.items():
-            if key_lst[key]:
-                sum_mv[0] += mv[0]
-                sum_mv[1] += mv[1]
-        # 経過時間(tmr)に応じてこうかとんの速度を上げる（最大10段階）
-        kk_speed = 1.0 + (min(tmr // 500, 9) * 0.5)
-        move_x = sum_mv[0] * kk_speed  # 実際の横移動量
-        move_y = sum_mv[1] * kk_speed  # 実際の縦移動量
-        kk_rct.move_ip(move_x, move_y)
-        if check_bound(kk_rct) != (True, True):  # 画面外に出たら
-            kk_rct.move_ip(-move_x, -move_y)     # 移動前の位置に戻す
-        kk_img = kk_imgs[tuple(sum_mv)]  # 移動方向に合った画像に切り替える
-        screen.blit(kk_img, kk_rct)
-
-        # 経過時間(tmr)に応じて爆弾のサイズ・速度を上げる（最大10段階）
-        bb_img = bb_imgs[min(tmr // 500, 9)]       # 段階に応じた爆弾画像を選択
-        bb_rct.width = bb_img.get_rect().width     # 爆弾RectのサイズをSurfaceに合わせる
-        bb_rct.height = bb_img.get_rect().height
-        avx = vx * bb_accs[min(tmr // 500, 9)]  # 段階に応じた横速度
-        avy = vy * bb_accs[min(tmr // 500, 9)]  # 段階に応じた縦速度
-        bb_rct.move_ip(avx, avy)  # 速度に応じて爆弾を移動
-        yoko, tate = check_bound(bb_rct)
-        if not yoko:
+        if not yoko:#画面外に出たら移動方向を反転させる
             vx*=-1
         if not tate:
             vy*=-1
